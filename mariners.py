@@ -5,16 +5,16 @@ from batter import Batter
 
 
 class Mariners(Mlb):
-    def __init__(self, league):
+    def __init__(self):
         super().__init__()
-        self.league = league
         self.id_ = self.get_id()
 
     def tabulate(self, batters):
-        return tabulate(b.tabulate() for b in sorted(batters, key=self._tabulate_key, reverse=True))
+        sorted_batters = sorted(batters, key=self._tabulate_key, reverse=True)
+        return tabulate(b.tabulate() for b in sorted_batters)
 
     def _tabulate_key(self, batter):
-        return batter.mops_plus
+        return batter.mops_plus()
 
     def get_id(self):
         id_, *rest = self.mlb.get_team_id("Seattle Mariners")
@@ -24,7 +24,7 @@ class Mariners(Mlb):
         return super().stats(partial(self.mlb.get_team_stats, self.id_))
 
     def batters(self):
-        return [Batter(p.id, p.fullname, self, self.league)
+        return [Batter(p.id, p.fullname, self.stats())
                 for p in self._remove_pitchers()]
 
     def _roster(self):

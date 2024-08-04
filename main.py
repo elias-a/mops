@@ -1,11 +1,8 @@
-from league import League
 from mariners import Mariners
 
 
-league = League()
-league_stats = league.stats()
-mariners = Mariners(league)
+mariners = Mariners()
 team_stats = mariners.stats()
 batters = mariners.batters()
-[b.stats() for b in batters]
+[b.mops_plus() for b in batters]
 print(mariners.tabulate(batters))

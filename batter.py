@@ -3,22 +3,17 @@ from mlb import Mlb
 
 
 class Batter(Mlb):
-    def __init__(self, id_, name, team, league):
+    def __init__(self, id_, name, team_stats):
         super().__init__()
         self.id_ = id_
         self.name = name
-        self.team = team
-        self.league = league
+        self.team_stats = team_stats
 
-    def stats(self):
+    def mops_plus(self):
         stats = super().stats(partial(self.mlb.get_player_stats, self.id_))
-        self.ops_plus = self.metric_plus(stats, self.league.stats())
-        self.mops_plus = self.metric_plus(stats, self.team.stats())
-
-    def metric_plus(self, stats, parent_stats):
         obp, slg, _ = stats
-        parent_obp, parent_slg, _ = parent_stats
-        return 100 * ((obp / parent_obp) + (slg / parent_slg) - 1)
+        team_obp, team_slg, _ = self.team_stats
+        return 100 * ((obp / team_obp) + (slg / team_slg) - 1)
 
     def tabulate(self):
-        return self.name, self.ops_plus, self.mops_plus
+        return self.name, self.mops_plus()
