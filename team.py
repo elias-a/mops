@@ -1,3 +1,4 @@
+from tabulate import tabulate
 from functools import partial
 from mlb import Mlb
 from batter import Batter
@@ -9,6 +10,12 @@ class Mariners(Mlb):
         self.league = league
         self.id_ = self.get_id()
 
+    def tabulate(self, batters):
+        return tabulate(b.tabulate() for b in sorted(batters, key=self._tabulate_key, reverse=True))
+
+    def _tabulate_key(self, batter):
+        return batter.mops_plus
+
     def get_id(self):
         id_, *rest = self.mlb.get_team_id("Seattle Mariners")
         return id_
@@ -17,8 +24,8 @@ class Mariners(Mlb):
         return super().stats(partial(self.mlb.get_team_stats, self.id_))
 
     def batters(self):
-        return (Batter(p.id, p.fullname, self, self.league) 
-                for p in self._remove_pitchers())
+        return [Batter(p.id, p.fullname, self, self.league)
+                for p in self._remove_pitchers()]
 
     def _roster(self):
         return self.mlb.get_team_roster(
