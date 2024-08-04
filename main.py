@@ -1,5 +1,5 @@
 from league import League
-from team import Mariners
+from mariners import Mariners
 
 
 league = League()
