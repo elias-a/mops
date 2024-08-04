@@ -1,7 +1,7 @@
-from team import Mariners
+from entity import Entity
 
 
-class MarinersBatters(Mariners):
+class Batter(Entity):
     def __init__(self):
         super().__init__()
 
